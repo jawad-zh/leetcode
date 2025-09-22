@@ -3,60 +3,72 @@ package main
 import "fmt"
 
 func main() {
-	RomanToInt("LVIII")
+	// RomanToInt("III")
+	RomanToInt("MCMXCVI")
 }
 
 func RomanToInt(s string) int {
-	var slqueue []int
-	var queue int
-	var one int
-	first := true
 	var Result int
-	var other bool
-	Map := map[string]int{
-		"I": 1,
-		"V": 5,
-		"X": 10,
-		"L": 50,
-		"C": 100,
-		"D": 500,
-		"M": 1000,
+	var slice []string
+	var sliceint []int
+	key:= map[string]int{
+		"I":1,
+		"V":5,
+		"X":10,	
+		"L":50,	
+		"C":100,	
+		"D":500,	
+		"M":1000,	
+		"two":2,
+		"three":3,
 	}
-	for i := 0; i < len(s); i++ {
-		value,ok:= Map[string(s[i])]
-		if ok {
-			slqueue = append(slqueue, value)
-		}
+	for _,r:= range s{
+		slice = append(slice, string(r))
 	}
-	for i:=0 ; i < len(slqueue) ; i++{
-		fmt.Println(slqueue[i])
-		if int(slqueue[i]) == 1{
-			one+= 1
-			fmt.Println("one:",one)
-		}else{
-			other = true
-			if one >= 2 && one <=3{
-				Result += one
-				fmt.Println("oneenterd")
-			
+	for i:=0 ; i < len(slice) ; i++{
+		if slice[i]== "I" && i!=0{
+			if slice[i-1] == "I"{
+				slice [i] = ""
+				slice[i-1]= "two"	
+				i--
+			}else if slice[i-1]== "two"{
+				slice[i]= ""
+				slice[i-1]="three"
+				i--
 			}
-			one=0
+			slice = clean(slice)
+		}
+		
+	}
+	for i:=0 ; i < len(slice) ; i++{
+		if value,ok:=key[slice[i]] ; ok{
+			sliceint = append(sliceint, value)
+		}
+	}
+	for j:=0 ; j < len(sliceint)  ; j++{
+		if len(sliceint)>1 {
+		if j!=0 && sliceint[j] > sliceint[j-1]{
+			sliceint[j]= sliceint[j] - sliceint[j-1]
+			sliceint[j-1]=0
+		}
+		
+		}
+	}
+	for i:=0 ; i < len(sliceint) ; i++{
+		Result += sliceint[i]
+	}
+	fmt.Println(Result)
+	return Result
+	
+}
 
-				if first{
-					Result+=slqueue[i] 
-					first = false
-				}
-				if i!= 0 && i%2==0{
-					queue = slqueue[i]-slqueue[i-1]
-					Result += queue
-					queue = 0
-				}
-			
+func clean(slice []string)([]string){
+	var Result []string 
+	for i:=0 ; i < len(slice); i++{
+		if slice[i]!= ""{
+			Result = append(Result,slice[i])
 		}
-		}
-		if !other{
-			Result = one
-		}
-		fmt.Println(Result)
-return Result
+	}
+	
+	return Result
 }
